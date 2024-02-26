@@ -65,5 +65,5 @@ traitlets==4.3.3
 typing_extensions==4.1.1
 wcwidth==0.2.13
 webencodings==0.5.1
-widgetsnbextension==3.6.6
+widgetsnbextension==4.0.10
 zipp==3.6.0
