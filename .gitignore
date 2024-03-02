@@ -5,6 +5,7 @@ Fashion_Show
 Output
 Dataset
 ./Dataset
+.idea/
 *.csv
 *.xlsx
 *.zip
