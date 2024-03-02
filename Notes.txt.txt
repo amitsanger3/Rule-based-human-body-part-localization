@@ -13,3 +13,104 @@ virtualenv -p C:\Users\amit\AppData\Local\Programs\Python\Python310\python.exe
 https://huggingface.co/arnabdhar/YOLOv8-Face-Detection
 https://github.com/WongKinYiu/yolov9/tree/main    # use colab code
 ====================================================================
+"LimbAware Dress Monitoring System"
+"FullBodyWear Detector."
+
+Naming a computer vision algorithm that focuses on identifying and monitoring dress wear on the human body through the detection of essential limbs and body parts involves combining descriptiveness with the functionality it offers. The name should reflect its specialized capability in the fashion or apparel domain, as well as its technical prowess in accurately identifying specific body parts. Considering this, here are a few suggestions that blend these aspects:
+
+1. **ApparelFit Vision**: This name emphasizes the algorithm's application in ensuring the right fit and appearance of clothing on the body, highlighting its utility in the fashion industry.
+
+2. **StyleScan Anatomy**: Combining "style" with "scan" and "anatomy" suggests a comprehensive analysis of how clothes fit on various body parts, ideal for fashion technology applications.
+
+3. **FashionFrame Detector**: This name suggests the algorithm's ability to frame or outline fashion elements on the human body, focusing on the structural detection of limbs for dress wear analysis.
+
+4. **GarmentGuide AI**: Highlighting its role as a guide for garment fitting and styling, this name positions the algorithm as an AI assistant for fashion design and retail.
+
+5. **BodyDress Mapping**: By focusing on the mapping aspect, this name indicates a detailed analysis and overlay of clothing on the body, suitable for custom tailoring and fashion design.
+
+6. **WearNet Analyzer**: Combining "wear" with "net" (suggesting network or neural network) and "analyzer," this name reflects the algorithm's technical background and its application in clothing and fashion analytics.
+
+7. **AttireTrace AI**: This name combines the process of tracing attire on the body with artificial intelligence, suggesting precision in identifying how clothing fits different body parts.
+
+8. **DressCode Vision**: Playing on the term "dress code," this name suggests the algorithm's ability to decode or understand clothing styles and how they align with the human body.
+
+9. **FashionFocus Segmentation**: Highlighting the algorithm's focus on fashion, this name suggests its ability to segment the body into key areas for apparel analysis.
+
+10. **ClothMap Dynamics**: This name suggests a dynamic mapping tool for clothing on the body, emphasizing its utility in dynamic or moving scenarios, useful for sports or performance wear analysis.
+
+Each of these names offers a different perspective on the algorithm's functionality, targeting various aspects like fit, style analysis, garment guidance, and body mapping. The choice depends on the specific application and target audience of the algorithm.
+
+======================================================
+# ! pip install --upgrade huggingface_hub
+# ! pip install ultralytics
+# ! pip install supervision
+
+model_path = hf_hub_download(repo_id="arnabdhar/YOLOv8-Face-Detection", filename="model.pt")
+model_path
+# 'C:\\Users\\amit\\.cache\\huggingface\\hub\\models--arnabdhar--YOLOv8-Face-Detection\\snapshots\\52fa54977207fa4f021de949b515fb19dcab4488\\model.pt'
+
+
+
+from huggingface_hub import hf_hub_download
+yolo9_model_path = hf_hub_download("merve/yolov9", filename="yolov9-c.pt", local_dir="./")
+print(yolo9_model_path)
+
+
+# In[4]:
+
+
+import os, sys; sys.path.append(os.path.dirname('./yolov9/'))
+
+
+# In[5]:
+
+
+# In[25]:
+
+
+image_path = os.path.join(img_path, img_name)
+
+op_img, preds = predict(image_path=image_path, weights='yolov9-c.pt', imgsz=640, conf_thres=0.1, iou_thres=0.45)
+
+
+# In[9]:
+
+
+preds[0]
+
+
+# In[14]:
+
+
+import PIL.Image
+
+image = PIL.Image.open(image_path)
+img0 = np.array(image)
+
+
+# In[15]:
+
+
+# Process detections
+for i, det in enumerate(preds):
+    if len(det):
+        det[:, :4] = scale_boxes(img.shape[2:], det[:, :4], img0.shape).round()
+        for *xyxy, conf, cls in reversed(det):
+            label = f'{names[int(cls)]} {conf:.2f}'
+            # Transform detections to supervisions detections
+            detections = sv.Detections(
+                xyxy=torch.stack(xyxy).cpu().numpy().reshape(1, -1),
+                class_id=np.array([int(cls)]),
+                confidence=np.array([float(conf)])
+            )
+            print(detections)
+            print('-'*50)
+            # Labels
+            # labels = [
+            #     f"{class_id} {confidence:0.2f}"
+            #     for class_id, confidence
+            #     in zip(detections.class_id, detections.confidence)
+            # ]
+
+            # img0 = bounding_box_annotator.annotate(img0, detections)
+            # img0 = label_annotator.annotate(img0, detections, labels)
