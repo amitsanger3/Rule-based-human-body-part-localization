@@ -1,0 +1,15 @@
+
+C:\Users\amit>where python
+C:\Users\amit\AppData\Local\Programs\Python\Python36\python.exe
+C:\Users\amit\AppData\Local\Programs\Python\Python37\python.exe
+C:\Users\amit\AppData\Local\Programs\Python\Python39\python.exe
+C:\Users\amit\AppData\Local\Programs\Python\Python310\python.exe
+C:\Users\amit\AppData\Local\Microsoft\WindowsApps\python.exe
+
+
+virtualenv -p C:\Users\amit\AppData\Local\Programs\Python\Python310\python.exe 
+
+======================== Dependencies Repo =========================
+https://huggingface.co/arnabdhar/YOLOv8-Face-Detection
+https://github.com/WongKinYiu/yolov9/tree/main    # use colab code
+====================================================================

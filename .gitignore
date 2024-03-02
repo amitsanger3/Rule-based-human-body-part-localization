@@ -3,3 +3,10 @@
 ./Output
 Fashion_Show
 Output
+Dataset
+./Dataset
+*.csv
+*.xlsx
+*.zip
+*.pt
+*.jpg
