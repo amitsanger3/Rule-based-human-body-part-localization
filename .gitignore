@@ -6,6 +6,8 @@ Output
 Dataset
 ./Dataset
 .idea/
+#__pychache__/
+#*.pyc
 *.csv
 *.xlsx
 *.zip

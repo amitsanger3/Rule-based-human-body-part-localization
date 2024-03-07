@@ -1,14 +1,19 @@
 import torch
+import os
+
 
 harcascade_classifier_path = r'F:\Documents\PROJECT\Face\HAARCASCADE'
+
+
 model_path = r'F:\Documents\PROJECT\Face\FACE_CLASSIFIER_MODEL_2'
-yolo_face_detection_model_path = ""
+yolo_face_detection_model_path = r'C:\\Users\\amit\\.cache\\huggingface\\hub\\models--arnabdhar--YOLOv8-Face-Detection\\snapshots\\52fa54977207fa4f021de949b515fb19dcab4488\\model.pt'
 
 cnn_model_path = os.path.join(model_path, "FRS_CLASSIFIER_Model_50.net")
 device=torch.device("cpu")
 
 colors = {
-    "face": "#ff3333",
+    "person": "#05ffa1",
+    "face": "#fb2e01",
     "neck": "#ff9933",
     "deep-neck": "#ffff33",
     "upper-half-torso": "#33ff33",
@@ -25,5 +30,5 @@ colors = {
 
 allowed_files = {
     "video":['.mp4', '.avi'],
-    "image":['jpg', 'png']
+    "image":['.jpg', '.png']
 }

@@ -30,7 +30,7 @@ class FrameDetector(object):
     
     @staticmethod
     def deep_neck_coordinates(x1,y1,w,h,h1):
-        return int(x1 - (w / 4)), y1 + h1, w, h
+        return int(x1 - (w / 8)), y1 + h1, w, h
     
     @staticmethod
     def upper_half_torso_coordinates(x,y,w,h, h1):
@@ -97,19 +97,35 @@ class FrameDetector(object):
         return (random.choice(range(0, 255)), random.choice(range(0, 255)), random.choice(range(0, 255)))
 
     @staticmethod
-    def draw_rectangle(image, coordinates, color, text, bb_box=True):
+    def hex_to_rgb(hex_color):
+        """Converts a hex color to RGB.
+
+        Args:
+          hex_color: A hex color string, e.g. '#FFFFFF'.
+
+        Returns:
+          A tuple of RGB values, e.g. (255, 255, 255).
+        """
+
+        hex_color = hex_color.lstrip('#')
+        rgb = tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
+        return rgb
+
+    def draw_rectangle(self, image, coordinates, color, text, bb_box=True):
+        img_height,_,_ = image.shape
+        color = self.hex_to_rgb(color)
         if bb_box:
             x,y,w,h = coordinates
-            x1, y1, x2, y2 = x, y, x_w, y+h
+            x1, y1, x2, y2 = x, y, x+w, y+h
         else:
             x1, y1, x2, y2 = coordinates
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
         cv2.putText(
             img=image,
             text=text,
-            org=(x1, y1-10),
+            org=(x1, y1-2),
             fontFace=cv2.FONT_HERSHEY_DUPLEX,
-            fontScale= 1.0,
+            fontScale= img_height/2000,
             color=color,
             thickness=1
         )
@@ -171,7 +187,54 @@ class FashionFrameDetection(FrameDetector):
         x4, y4, x4_, y4_ = self.legs_coordinates(x3, y3, w3, h3, b_y2)
         x5, y5, x5_, y5_ = self.foot_coordinates(x4, x4_, y4_, h)
         x6, y6, x6_, y6_ = self.dress_fullness(b_x1, y2, h2, b_x2, b_y2)
+
+        if self.save:
+            text = "Person"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(b_x1, b_y1, b_x2, b_y2), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Neck"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x1, y1, w1, h1))
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Deep-Neck"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x1_1, y1_1, w1_1, h1_1))
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Upper-Half-Torso"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x2, y2, w2, h2))
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Lower-Half-Torso"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x3, y3, w3, h3))
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+
+            # left limbs
+            text = "Left Arm"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_l1, y_l1, x_l2, y_l2), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
+            text = "Left Hand"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_lh1, y_lh1, x_lh2, y_lh2), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
+
+            # right limbs
+            text = "Right Arm"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_r1, y_r1, x_r2, y_r2), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
+            text = "Right Hand"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_rh1, y_rh1, x_rh2, y_rh2), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
+
+            text = "Legs"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x4, y4, x4_, y4_), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Feet"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x5, y5, x5_, y5_), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            text = "Fullness"
+            cropped_frame = self.crop_frame(image=image_c, coordinates=(x6, y6, x6_, y6_), bb_box=False)
+            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+
         if self.display:
+            text = "Person"
+            color_ = self.colors[text.lower()]
+            self.draw_rectangle(image, (b_x1, b_y1, b_x2, b_y2), color_, text, bb_box=False)
             text = "Face"
             color_ = self.colors[text.lower()]
             self.draw_rectangle(image, self.face_coordinates, color_, text)
@@ -214,45 +277,6 @@ class FashionFrameDetection(FrameDetector):
             color_ = self.colors[text.lower()]
             self.draw_rectangle(image, (x6, y6, x6_, y6_), color_, text, bb_box=False)
 
-        if self.save:
-            text = "Neck"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x1, y1, w1, h1))
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Deep-Neck"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x1_1, y1_1, w1_1, h1_1))
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Upper-Half-Torso"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x2, y2, w2, h2))
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Lower-Half-Torso"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x3, y3, w3, h3))
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-
-            # left limbs
-            text = "Left Arm"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_l1, y_l1, x_l2, y_l2), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
-            text = "Left Hand"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_lh1, y_lh1, x_lh2, y_lh2), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
-
-            # right limbs
-            text = "Right Arm"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_r1, y_r1, x_r2, y_r2), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
-            text = "Right Hand"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x_rh1, y_rh1, x_rh2, y_rh2), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{'-'.join(text.split()).lower()}.jpg", cropped_img=cropped_frame)
-
-            text = "Legs"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x4, y4, x4_, y4_), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Feet"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x5, y5, x5_, y5_), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Fullness"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x6, y6, x6_, y6_), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
         # saving final image
         self.save_crop(output_dir=self.output_dir, image_name="view.jpg", cropped_img=image)
         # image = self.resize_with_aspect_ratio(img=image)
