@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # shutil.rmtree(TEMP_DIR, ignore_errors=True)
 
     dataset_processor(
-        dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset1",
+        dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
         output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\YOLO_Output_Complete_Datset",
         use_yolo=True
     )
