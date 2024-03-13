@@ -12,4 +12,4 @@ __pychache__/
 *.xlsx
 *.zip
 *.pt
-*.jpg
+#*.jpg

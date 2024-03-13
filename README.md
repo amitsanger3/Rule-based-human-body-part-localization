@@ -37,6 +37,11 @@ To run this project, you will need to change the following variables to your con
 
 `device=torch.device("cpu")` # change to gpu if you have gpu enabled devide.
 
+`TEMP_DIR` # Directory to store temporary files.
+
+`EVAL_DIR` # Directory to store evaluation files.
+
+`RAW_DIR_NAME` # Raw files while using YOLOv9
 
 ## Installation
 
