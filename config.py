@@ -11,6 +11,17 @@ yolo_face_detection_model_path = r'C:\\Users\\amit\\.cache\\huggingface\\hub\\mo
 cnn_model_path = os.path.join(model_path, "FRS_CLASSIFIER_Model_50.net")
 device=torch.device("cpu")
 
+TEMP_DIR = "./temp_yolo"
+TEMP_INTENSITY_IMG="person_intensity.jpg"
+TEMP_X_AXIS_IMG="x_intensity.jpg"
+TEMP_Y_AXIS_IMG="y_intensity.jpg"
+
+EVAL_DIR = "./evaluation_yolo_files"
+VIDEO_EVAL_FILE = "videos_eval.csv"
+IMAGES_EVAL_FILE = "images_eval.csv"
+
+RAW_DIR_NAME = "RAW_yolo"
+
 colors = {
     "person": "#05ffa1",
     "face": "#fb2e01",

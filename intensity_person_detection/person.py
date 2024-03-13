@@ -1,6 +1,11 @@
+import os
 import cv2
 import numpy as np
 from rembg import remove
+from config import *
+import matplotlib.pyplot as plt
+import numpy as np
+import traceback
 
 
 class IntensityPersonDetect(object):
@@ -8,6 +13,8 @@ class IntensityPersonDetect(object):
     def __init__(self, image):
         self.image = image
         self.h, self.w, _= self.image.shape
+
+        if not os.path.exists(TEMP_DIR): os.makedirs(TEMP_DIR)
 
     def remove_background(self):
         return remove(self.image)
@@ -83,20 +90,62 @@ class IntensityPersonDetect(object):
     def binary_gray(img, reduction=10):
         return np.where(img - np.array([reduction]) < 0, 0, 1)
 
+    @staticmethod
+    def save_plot(intensity_map, image_name, flip=False):
+        # Configure the plot
+        plt.figure(figsize=(8, 6))  # Set the figure size
+        if flip:
+            plt.plot(np.flip(intensity_map), np.arange(intensity_map.shape[0]))
+            x_label = "Pixel Intensity"
+            y_label = "y-axis"
+            title  = "Intensity of pixels on Y-ais."
+        else:
+            plt.plot(np.arange(intensity_map.shape[0]), intensity_map)
+            y_label = "Pixel Intensity"
+            x_label = "x-axis"
+            title = "Intensity of pixels on X-ais."
+
+        # Add labels and title
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.title(title)
+
+        # Display the plot
+        plt.grid(True)  # Add gridlines for better readability
+        plt.savefig(os.path.join(TEMP_DIR, image_name))
+        plt.close()
+
     def detect(self, threshold=10):
         no_bg_img = self.remove_background()
         no_bg_gray = cv2.cvtColor(no_bg_img, cv2.COLOR_BGR2GRAY)
         no_bg_gray = self.binary_gray(no_bg_gray)
+        try:
+            cv2.imwrite(
+                os.path.join(TEMP_DIR, TEMP_INTENSITY_IMG),
+                cv2.cvtColor(np.uint8(no_bg_gray * np.array([255])), cv2.COLOR_GRAY2BGR)
+            )
+        except:
+            print(traceback.print_exc())
+            pass
 
         # on X axis
         intensity_map = no_bg_gray.sum(axis=0)
         all_indices = self.find_all_indices(self.modify_array(intensity_map, threshold=threshold))
         x_cords = self.get_cordinates(all_indices, intensity_map)
-
+        try:
+            self.save_plot(intensity_map, image_name=TEMP_X_AXIS_IMG, flip=False)
+        except:
+            print(traceback.print_exc())
+            pass
         # on y axis
         intensity_map = no_bg_gray.sum(axis=1)
         all_indices = self.find_all_indices(self.modify_array(intensity_map, threshold=threshold))
         y_cords = self.get_cordinates(all_indices, intensity_map)
+        try:
+            self.save_plot(intensity_map, image_name=TEMP_Y_AXIS_IMG, flip=True)
+        except:
+            print(traceback.print_exc())
+            pass
 
         if len(x_cords) == 0 or len(y_cords) == 0:
             print('No model detected')

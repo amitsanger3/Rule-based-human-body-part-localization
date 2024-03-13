@@ -119,31 +119,37 @@ class FrameDetector(object):
             x1, y1, x2, y2 = x, y, x+w, y+h
         else:
             x1, y1, x2, y2 = coordinates
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
-        cv2.putText(
-            img=image,
-            text=text,
-            org=(x1, y1-2),
-            fontFace=cv2.FONT_HERSHEY_DUPLEX,
-            fontScale= img_height/2000,
-            color=color,
-            thickness=1
-        )
+        if y2 > y1:
+            cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
+            cv2.putText(
+                img=image,
+                text=text,
+                org=(x1, y1-2),
+                fontFace=cv2.FONT_HERSHEY_DUPLEX,
+                fontScale= img_height/2000,
+                color=color,
+                thickness=1
+            )
         return None
 
     @staticmethod
     def crop_frame(image, coordinates, bb_box=True):
         if bb_box:
             x,y,w,h = coordinates
-            return image[y:y+h, x:x+w]
+            if y+h > y:
+                return image[y:y+h, x:x+w]
         else:
             x1, y1, x2, y2 = coordinates
-            return image[y1:y2, x1:x2]
+            if y2 >  y1:
+                return image[y1:y2, x1:x2]
+        return None
 
     @staticmethod
     def save_crop(output_dir, image_name, cropped_img):
-        name = os.path.join(output_dir, image_name)
-        cv2.imwrite(name, cropped_img)
+        if cropped_img is not None:
+            name = os.path.join(output_dir, image_name)
+            cv2.imwrite(name, cropped_img)
+        return None
 
 
 
@@ -188,6 +194,10 @@ class FashionFrameDetection(FrameDetector):
         x5, y5, x5_, y5_ = self.foot_coordinates(x4, x4_, y4_, h)
         x6, y6, x6_, y6_ = self.dress_fullness(b_x1, y2, h2, b_x2, b_y2)
 
+        is_full_image = False
+        if h2 + (h3/2) <= y4_ - y4 - h:
+            is_full_image = True
+
         if self.save:
             text = "Person"
             cropped_frame = self.crop_frame(image=image_c, coordinates=(b_x1, b_y1, b_x2, b_y2), bb_box=False)
@@ -224,9 +234,10 @@ class FashionFrameDetection(FrameDetector):
             text = "Legs"
             cropped_frame = self.crop_frame(image=image_c, coordinates=(x4, y4, x4_, y4_), bb_box=False)
             self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
-            text = "Feet"
-            cropped_frame = self.crop_frame(image=image_c, coordinates=(x5, y5, x5_, y5_), bb_box=False)
-            self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
+            if is_full_image:
+                text = "Feet"
+                cropped_frame = self.crop_frame(image=image_c, coordinates=(x5, y5, x5_, y5_), bb_box=False)
+                self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
             text = "Fullness"
             cropped_frame = self.crop_frame(image=image_c, coordinates=(x6, y6, x6_, y6_), bb_box=False)
             self.save_crop(output_dir=self.output_dir, image_name=f"{text.lower()}.jpg", cropped_img=cropped_frame)
@@ -270,9 +281,10 @@ class FashionFrameDetection(FrameDetector):
             text = "Legs"
             color_ = self.colors[text.lower()]
             self.draw_rectangle(image, (x4, y4, x4_, y4_), color_, text, bb_box=False)
-            text = "Feet"
-            color_ = self.colors[text.lower()]
-            self.draw_rectangle(image, (x5, y5, x5_, y5_), color_, text, bb_box=False)
+            if is_full_image:
+                text = "Feet"
+                color_ = self.colors[text.lower()]
+                self.draw_rectangle(image, (x5, y5, x5_, y5_), color_, text, bb_box=False)
             text = "Fullness"
             color_ = self.colors[text.lower()]
             self.draw_rectangle(image, (x6, y6, x6_, y6_), color_, text, bb_box=False)

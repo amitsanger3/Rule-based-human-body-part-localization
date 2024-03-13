@@ -2,7 +2,7 @@ from config import *
 from utilities import *
 
 import os, sys
-
+import shutil
 
 from pathlib import Path
 
@@ -16,7 +16,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 sys.path.append(os.path.dirname('./yolov9/'))
 
 
-def dataset_processor(dataset_path, output_path):
+def dataset_processor(dataset_path, output_path, use_yolo=False):
     harcascade_face_classifier = cv2.CascadeClassifier(os.path.join(harcascade_classifier_path, os.listdir(harcascade_classifier_path)[0]))
     if os.path.isfile(dataset_path):
         if os.path.splitext(os.path.basename(dataset_path))[-1] in allowed_files['video']:
@@ -26,6 +26,7 @@ def dataset_processor(dataset_path, output_path):
                                                         output_dir=output_path,
                                                         cnn_model_path=cnn_model_path, device=device,
                                                         use_yolo=True,
+                                                        use_fcn=True,
                                                         save_detections=True,
                                                         display=True)
             frame_detector.video_processor()
@@ -37,6 +38,7 @@ def dataset_processor(dataset_path, output_path):
                                                         output_dir=output_path,
                                                         cnn_model_path=cnn_model_path, device=device,
                                                         use_yolo=True,
+                                                        use_fcn=True,
                                                         save_detections=True,
                                                         display=True)
             frame_detector.frames_detection()
@@ -52,6 +54,14 @@ if __name__ == "__main__":
     sys.path.append(os.path.dirname('./yolov9/'))
     # dataset_processor(dataset_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset\Fashion-Dataset-Images-Western-Dress-master\WesternDress_Images",
     #                   output_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Output")
+    # dataset_processor(
+    #     dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset2",
+    #     output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Output_Complete_Datset")
+    # shutil.rmtree(TEMP_DIR, ignore_errors=True)
+
     dataset_processor(
-        dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset\Vids",
-        output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Output")
+        dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset1",
+        output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\YOLO_Output_Complete_Datset",
+        use_yolo=True
+    )
+    shutil.rmtree(TEMP_DIR, ignore_errors=True)
