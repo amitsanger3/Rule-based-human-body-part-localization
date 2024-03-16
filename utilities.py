@@ -1,5 +1,6 @@
 import pandas as pd
 import shutil
+import time
 
 from frame.fashion_frame import *
 from Harcascade_Face_Detection.Faces import *
@@ -107,7 +108,9 @@ class ImageFashionFrameDetection(object):
             if self.use_yolo:
                 try:
                     face_coordinates = self.yolo_face_detect()
+                    start = time.time()
                     person_coordinates = self.yolo_person_detect()
+                    print("Yolo Person time: \t", time.time()-start)
                 except:
                     self.img_dict["Haarcascade_face"].append(None)
                     self.img_dict["Yolo_face"].append(None)
@@ -127,7 +130,9 @@ class ImageFashionFrameDetection(object):
             else:
                 try:
                     face_coordinates = self.haarcascade_face_detection()
+                    start = time.time()
                     person_coordinates = self.intensity_person_detect()
+                    print("Intensity Person time: \t", time.time() - start)
                 except:
                     self.img_dict["Haarcascade_face"].append(None)
                     self.img_dict["Yolo_face"].append(None)

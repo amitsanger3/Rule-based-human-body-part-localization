@@ -25,7 +25,7 @@ def dataset_processor(dataset_path, output_path, use_yolo=False):
                                                         yolo_face_model_path=yolo_face_detection_model_path,
                                                         output_dir=output_path,
                                                         cnn_model_path=cnn_model_path, device=device,
-                                                        use_yolo=True,
+                                                        use_yolo=False,
                                                         use_fcn=True,
                                                         save_detections=True,
                                                         display=True)
@@ -37,7 +37,7 @@ def dataset_processor(dataset_path, output_path, use_yolo=False):
                                                         yolo_face_model_path=yolo_face_detection_model_path,
                                                         output_dir=output_path,
                                                         cnn_model_path=cnn_model_path, device=device,
-                                                        use_yolo=True,
+                                                        use_yolo=False,
                                                         use_fcn=True,
                                                         save_detections=True,
                                                         display=True)
@@ -54,14 +54,14 @@ if __name__ == "__main__":
     sys.path.append(os.path.dirname('./yolov9/'))
     # dataset_processor(dataset_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset\Fashion-Dataset-Images-Western-Dress-master\WesternDress_Images",
     #                   output_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Output")
-    # dataset_processor(
-    #     dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset2",
-    #     output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Output_Complete_Datset")
-    # shutil.rmtree(TEMP_DIR, ignore_errors=True)
-
     dataset_processor(
         dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
-        output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\YOLO_Output_Complete_Datset",
-        use_yolo=True
-    )
+        output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Output_Complete_Datset")
     shutil.rmtree(TEMP_DIR, ignore_errors=True)
+
+    # dataset_processor(
+    #     dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
+    #     output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\YOLO_Output_Complete_Datset",
+    #     use_yolo=True
+    # )
+    # shutil.rmtree(TEMP_DIR, ignore_errors=True)
