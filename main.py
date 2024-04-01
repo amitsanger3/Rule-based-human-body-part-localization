@@ -48,16 +48,38 @@ def dataset_processor(dataset_path, output_path, use_yolo=False):
         dataset_content = os.listdir(dataset_path)
         for content in dataset_content:
             dataset_processor(dataset_path=os.path.join(dataset_path, content), output_path=os.path.join(output_path, content))
-        
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Process dataset with fashion frame detection.")
+    parser.add_argument("dataset_path", type=str, help="Path to the dataset (can be a file or directory).")
+    parser.add_argument("output_path", type=str, help="Output path to save the processed results.")
+    parser.add_argument("--use_yolo", action="store_true", help="Whether to use YOLO for face detection.")
+    parser.add_argument("--no_fcn", dest="use_fcn", action="store_false", help="Disable FCN.")
+    parser.add_argument("--no_save_detections", dest="save_detections", action="store_false",
+                        help="Disable saving detections.")
+    parser.add_argument("--no_display", dest="display", action="store_false", help="Disable display.")
+    return parser.parse_args()
+
         
 if __name__ == "__main__":
     sys.path.append(os.path.dirname('./yolov9/'))
+
+    args = parse_args()
+    dataset_processor(dataset_path=args.dataset_path,
+                      output_path=args.output_path,
+                      use_yolo=args.use_yolo,
+                      use_fcn=args.use_fcn,
+                      save_detections=args.save_detections,
+                      display=args.display)
+    shutil.rmtree(TEMP_DIR, ignore_errors=True)
+
     # dataset_processor(dataset_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset\Fashion-Dataset-Images-Western-Dress-master\WesternDress_Images",
     #                   output_path="F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Output")
-    dataset_processor(
-        dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
-        output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Output_Complete_Datset")
-    shutil.rmtree(TEMP_DIR, ignore_errors=True)
+    # dataset_processor(
+    #     dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
+    #     output_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Output_Complete_Datset")
+    # shutil.rmtree(TEMP_DIR, ignore_errors=True)
 
     # dataset_processor(
     #     dataset_path=r"F:\Documents\PROJECT\GARMENTS\CROQUIE_DC\Rule-based-human-body-part-localization\Dataset",
