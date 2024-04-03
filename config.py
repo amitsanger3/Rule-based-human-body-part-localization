@@ -2,13 +2,13 @@ import torch
 import os
 
 
-harcascade_classifier_path = r'F:\Documents\PROJECT\Face\HAARCASCADE'
+harcascade_classifier_path = r'F:\Documents\PROJECT\Face\HAARCASCADE'  # path where haarcascade face detection model is placed
 
 
 model_path = r'F:\Documents\PROJECT\Face\FACE_CLASSIFIER_MODEL_2'
-yolo_face_detection_model_path = r'C:\\Users\\amit\\.cache\\huggingface\\hub\\models--arnabdhar--YOLOv8-Face-Detection\\snapshots\\52fa54977207fa4f021de949b515fb19dcab4488\\model.pt'
-
-cnn_model_path = os.path.join(model_path, "FRS_CLASSIFIER_Model_50.net")
+yolo_face_detection_model_path = r'C:\\Users\\amit\\.cache\\huggingface\\hub\\models--arnabdhar--YOLOv8-Face-Detection\\snapshots\\52fa54977207fa4f021de949b515fb19dcab4488\\model.pt' # path where yolov9 pretrained face detection model is placed
+yolo_person_detection_model_path = r'yolov9-c.pt'  # path where yolov9 pretrained person detection model is placed
+cnn_model_path = os.path.join(model_path, "FRS_CLASSIFIER_Model_50.net")  # path where pretrained face classifier model is placed
 device=torch.device("cpu")
 
 TEMP_DIR = "./temp"

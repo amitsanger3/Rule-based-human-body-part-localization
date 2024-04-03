@@ -15,7 +15,7 @@ import yolov9.inference  as yolo_inf
 
 def predict(image_path, weights='yolov9-c.pt', imgsz=640, conf_thres=0.1, iou_thres=0.45, device='cpu',
             data='data/coco.yaml'):
-    return yolo_inf.predict(image_path, weights='yolov9-c.pt', imgsz=640, conf_thres=0.1, iou_thres=0.45, device='cpu',
+    return yolo_inf.predict(image_path, weights=weights, imgsz=640, conf_thres=0.1, iou_thres=0.45, device=device,
             data='data/coco.yaml')
 
 

@@ -29,11 +29,11 @@ To run this project, you will need to change the following variables to your con
 
 `harcascade_classifier_path`  # Path where haarcascade is resides.
 
-`cnn_model_path`  # Path where Fully Connected trained model resides.
+`cnn_model_path`  # Path where [Fully Connected pre-trained model weights](https://drive.google.com/file/d/1lecKGfd6-03lk5Gcv5wmnu7-yIYkZul5/view?usp=sharing) resides.
 
-`yolo_face_detection_model_path`  # Path where yolo face-detection model resides.
+`yolo_face_detection_model_path` # Path where [yolo-v9 pre-trained face-detection model weights](https://drive.google.com/file/d/1EbvKd8ADCLzGwhRqRqA5JWW0Xv_UHitg/view?usp=sharing) resides.
 
-`yolo_person_detection_model_path`  # Path where yolo person-detection model resides.
+`yolo_person_detection_model_path`   # Path where [yolo-v9 person-detection pre-trained model weights](https://drive.google.com/file/d/1PJTfkVgo9tKt6uPru85Lxqiyl2TBBYOf/view?usp=sharing) resides.
 
 `device=torch.device("cpu")` # change to gpu if you have gpu enabled devide.
 
@@ -84,3 +84,18 @@ This research contributes to the advancement of fashion-oriented computer vision
 [comment]: <> (  publisher={The Publisher})
 
 [comment]: <> (})
+
+[comment]: <> (weights resides in black.coffee)
+
+## Reference
+
+ - [YoloV9](https://github.com/WongKinYiu/yolov9) : Learning What You Want to Learn Using Programmable Gradient Information
+   ```
+   @article{wang2024yolov9,
+      title={{YOLOv9}: Learning What You Want to Learn Using Programmable Gradient Information},
+      author={Wang, Chien-Yao  and Liao, Hong-Yuan Mark},
+      booktitle={arXiv preprint arXiv:2402.13616},
+      year={2024}
+    }
+    ```
+

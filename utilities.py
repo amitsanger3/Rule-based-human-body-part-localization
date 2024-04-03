@@ -76,7 +76,7 @@ class ImageFashionFrameDetection(object):
         return detector.detect(threshold=threshold)
 
     def yolo_person_detect(self):
-        detections = predict(image_path=self.image_path)
+        detections = predict(image_path=self.image_path, weights=yolo_person_detection_model_path, device=device)
         # print("Detections:" , detections)
         face_co_ordinates = []
         for detection in detections:
